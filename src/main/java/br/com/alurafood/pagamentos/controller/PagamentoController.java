@@ -33,7 +33,7 @@ public class PagamentoController {
     @PostMapping
     public ResponseEntity<PagamentoDto> criarPagamento(@RequestBody @Valid PagamentoDto dto, UriComponentsBuilder uriBuilder) {
         var pagamentoCriado = service.criarPagamento(dto);
-        var uri = uriBuilder.path("/pagamentos/{id}").buildAndExpand(pagamentoCriado.id()).toUri();
+        var uri = uriBuilder.path("/pagamentos/{id}").buildAndExpand(pagamentoCriado.getId()).toUri();
 
         return ResponseEntity.created(uri).body(pagamentoCriado);
     }
