@@ -2,3 +2,11 @@ spring:
   application:
     name: pagamentos
 
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/alurafood-pagamento?createDatabaseIfNotExist=true
+    username: root
+    password: ${DB_PASSWORD}
+
+  jpa:
+    show-sql: true
