@@ -1,6 +1,6 @@
 spring:
   application:
-    name: pagamentos
+    name: pagamentos-ms
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -10,3 +10,11 @@ spring:
 
   jpa:
     show-sql: true
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8081/eureka/
+
+server:
+  port: 0
