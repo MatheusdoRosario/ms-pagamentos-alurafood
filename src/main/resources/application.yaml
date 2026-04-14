@@ -15,6 +15,16 @@ eureka:
   client:
     service-url:
       defaultZone: http://localhost:8081/eureka/
+  instance:
+    instance-id: ${spring.application.name}:${random.value}
 
 server:
   port: 0
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      atualizaPedido:
+        slidingWindowSize: 3
+        minimumNumberOfCalls: 2
+        waitDurationInOpenState: 50s
