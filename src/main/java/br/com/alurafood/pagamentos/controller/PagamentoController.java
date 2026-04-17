@@ -5,6 +5,8 @@ import br.com.alurafood.pagamentos.service.PagamentoService;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,12 +15,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.nio.charset.StandardCharsets;
+
 @RestController
 @RequestMapping("/pagamentos")
 public class PagamentoController {
 
     @Autowired
     private PagamentoService service;
+
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
 
     @GetMapping
     public Page<PagamentoDto> obterTodos(@PageableDefault(size = 10) Pageable pageable) {
@@ -36,6 +43,8 @@ public class PagamentoController {
         var pagamentoCriado = service.criarPagamento(dto);
         var uri = uriBuilder.path("/pagamentos/{id}").buildAndExpand(pagamentoCriado.getId()).toUri();
 
+        Message message = new Message(("Criei um pagamento com o id " + pagamentoCriado.getId()).getBytes());
+        rabbitTemplate.send("pagamento.concluido", message);
         return ResponseEntity.created(uri).body(pagamentoCriado);
     }
 
